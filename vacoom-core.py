@@ -25,7 +25,7 @@ logger = logging.getLogger('vacoom')
 hdlr = logging.FileHandler(logfile)
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
-logger.addHandler(hdlr) 
+logger.addHandler(hdlr)
 logger.setLevel(logging.DEBUG)
 
 #Configuration
@@ -33,7 +33,7 @@ Config = configparser.ConfigParser()
 Config.read(rules)
 rules = Config.sections()
 
-# Results. 
+# Results.
 matched_files = []
 matched_files_dict = {}
 file_count = 0
@@ -47,14 +47,9 @@ for rule in rules:
     if Config.get(rule, 'enabled') == '0':
         logger.info('not processing => %s , is disabled', rule)
         continue
-    # Getting configuration values for each rule.
-    # ast.literal_eval will take the string in the config file and convertit in a list. 
     directories=ast.literal_eval(Config.get(rule, 'directories'))
     extensions=ast.literal_eval(Config.get(rule, 'extensions'))
-    # This does not belongs here this belongs to actions.
-    dst=(Config.get(rule, 'destination'))
     for directory in directories:
-        # Os.walk <= Research performance implications and other options.
         for root, dirs, files in os.walk(directory, topdown=True):
             for file in files:
                 scanned_files += 1
@@ -62,21 +57,14 @@ for rule in rules:
                     # Exclude hidden unix files.
                     files = [f for f in files if not f[0] == '.']
                     dirs[:] = [d for d in dirs if not d[0] == '.']
-                    # Filter by extension only evaluate filename could evalute kind to detect obvious errors.
                     if (file.endswith(ext)):
-                        #print(os.path.join(root, file), ext)
                         matched_files_dict[os.path.join(root, file)] = rule
-                        #matched_files.append(os.path.join(root, file))
-#print(matched_files_dict)
-#ending the timer.
 end_time = time.time()
 elapsed_time = end_time - start_time
-#print(matched_files)
 file_count = len(matched_files)
 logger.info('matched files %s scanned files %s', file_count, scanned_files)
 logger.info('seconds to scan %s', elapsed_time)
 # Actions
-# Evaluating results from dictionary not the list to map de rule so we can get action dst etc. 
 def copyf(f, dst):
     try:
         logger.info('copying %s to %s', f, dst)
@@ -100,7 +88,6 @@ def delf(f):
     except Exception as e:
         logger.warning('an exception occurred: %s', e)
 for k,v in matched_files_dict.items():
-    #print('rulename', v, 'will do', Config.get(v, 'action'), 'destination', Config.get(v, 'destination'), 'with', k)
     if Config.get(v, 'destination') in k:
         print('Already in destination', k ,'in', Config.get(v, 'destination'))
         continue
@@ -109,13 +96,10 @@ for k,v in matched_files_dict.items():
         continue
     else:
         if Config.get(v, 'action') == 'delete':
-            #print(v, 'will delete')
             delf(k)
         elif Config.get(v, 'action') == 'move':
-            #print(v, 'will move')
             movef(k, Config.get(v, 'destination'))
         elif Config.get(v, 'action') == 'copy':
-            #print(v, 'will copy')
             copyf(k, Config.get(v, 'destination'))
         else:
             logger.warning('bad action %s for rule %s', v, Config.get(v, 'action'))
