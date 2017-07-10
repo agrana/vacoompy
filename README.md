@@ -1,7 +1,5 @@
 # vacoompy
 
-![Vacoom logo](https://raw.githubusercontent.com/agrana/vacoompy/master/vacuum_logo.jpg)
-
 Simple file procesor scan file systems for files matching certain criteria and apply actions to them. 
 Each rule is  a section in a ini style file ~/.vacoom/rules.ini : 
 
