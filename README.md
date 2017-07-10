@@ -1,7 +1,7 @@
 # vacoompy
 File procesor scan file systems for files matching certain criteria and apply actions to them. 
 Each rule should be a section in a ini style file like this: 
-```
+```ini
 [Pdf in download folders]
 directories: ['/Users/peter/Downloads']
 extensions: ['pdf']
