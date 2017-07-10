@@ -10,6 +10,8 @@ destination = /Users/peter/pdfs/
 enabled = 1
 action = move
 ```
+All actions get logged in ~/.vacoom/vacoom.log
+
 TODO
 
-Extend criteria and actions. 
+Extend criteria for matching and actions. 
