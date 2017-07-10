@@ -14,4 +14,4 @@ All actions get logged in ~/.vacoom/vacoom.log
 
 TODO
 
-Extend criteria and actions. 
+Extend criteria for matching and actions. 
