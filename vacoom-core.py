@@ -44,8 +44,8 @@ start_time = time.time()
 # Reading rules from configuration and starting to fill collections of files to act on.
 for rule in rules:
     # if rule is disabled continue.
-    if Config.get(rule, 'enabled') == '0':
-        logger.info('not processing => %s , is disabled', rule)
+    if Config.get(rule, 'enabled') != '1':
+        logger.info('not processing => %s , is not enabled', rule)
         continue
     directories=ast.literal_eval(Config.get(rule, 'directories'))
     extensions=ast.literal_eval(Config.get(rule, 'extensions'))
@@ -87,7 +87,7 @@ def delf(f):
         os.remove(f)
     except Exception as e:
         logger.warning('an exception occurred: %s', e)
-for k,v in matched_files_dict.items():
+for k, v in matched_files_dict.items():
     if Config.get(v, 'destination') in k:
         print('Already in destination', k ,'in', Config.get(v, 'destination'))
         continue
